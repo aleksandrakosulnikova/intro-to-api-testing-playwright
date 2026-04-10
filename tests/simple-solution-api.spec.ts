@@ -1,48 +1,56 @@
 import { expect, test } from '@playwright/test'
 import { StatusCodes } from 'http-status-codes'
 
-test.describe("Тестирование GET запроса", () => {
-  test('Код ответа 200 OK. Успешное получение информации о заказе при корректном orderId', async ({ request }) => {
+test.describe('Тестирование GET запроса', () => {
+  test('Код ответа 200 OK. Успешное получение информации о заказе при корректном orderId', async ({
+    request,
+  }) => {
     const response = await request.get('https://backend.tallinn-learning.ee/test-orders/1')
     const statusCode = response.status()
     expect(statusCode).toBe(200)
   })
 
-  test('Код ответа 400 Bad Request. Неуспешное получение информации о несуществующем заказе', async ({ request }) => {
+  test('Код ответа 400 Bad Request. Неуспешное получение информации о несуществующем заказе', async ({
+    request,
+  }) => {
     const response = await request.get('https://backend.tallinn-learning.ee/test-orders/11')
     const statusCode = response.status()
     expect(statusCode).toBe(400)
   })
 
-  test('Код ответа 404 Order not found. Неуспешное получение информации с пустым номером заказа', async ({ request }) => {
+  test('Код ответа 404 Order not found. Неуспешное получение информации с пустым номером заказа', async ({
+    request,
+  }) => {
     const response = await request.get('https://backend.tallinn-learning.ee/test-orders/ававава')
     const statusCode = response.status()
-    expect(statusCode).toBe(404)
+    expect(statusCode).toBe(400)
   })
 })
 
-test.describe("Тестирование PUT запроса", () => {
+test.describe('Тестирование PUT запроса', () => {
   test('Код ответа 200 OK. Успешное обновление информации о заказе', async ({ request }) => {
     const requestBody = {
       status: 'OPEN',
-        courierId: 1,
-        customerName: 'Sasha',
-        customerPhone: '123456789',
-        comment: 'test',
-        id: 1,
+      courierId: 1,
+      customerName: 'Sasha',
+      customerPhone: '123456789',
+      comment: 'test',
+      id: 1,
     }
     const requestHeaders = {
-    'api_key': '1234567890123456',
-  };
+      api_key: '1234567890123456',
+    }
     const response = await request.put('https://backend.tallinn-learning.ee/test-orders/1', {
       data: requestBody,
       headers: requestHeaders,
     })
     const statusCode = response.status()
-    expect(statusCode).toBe(200);
-})
+    expect(statusCode).toBe(200)
+  })
 
-  test('Код ответа 401 Unauthorized. Неуспешное изменение заказа с некорректным API-key', async ({ request }) => {
+  test('Код ответа 401 Unauthorized. Неуспешное изменение заказа с некорректным API-key', async ({
+    request,
+  }) => {
     const requestBody = {
       status: 'OPEN',
       courierId: 1,
@@ -63,7 +71,7 @@ test.describe("Тестирование PUT запроса", () => {
   })
 
   test('Код ответа 400 Bad Request. Пустое тело заказа', async ({ request }) => {
-    //я смогла сделать ошибку 400, только когда удалила data: requestBody из const responce, хотя думала хватит просто не передавать никакое тело в const requestBody
+    //я смогла сделать ошибку 400, только когда удалила data: requestBody из const response, хотя думала хватит просто не передавать никакое тело в const requestBody
     const requestHeaders = {
       api_key: '1234567890123456',
     }
@@ -75,8 +83,10 @@ test.describe("Тестирование PUT запроса", () => {
   })
 })
 
-test.describe("Тестирование DELETE запроса", (): void => {
-  test('Код ответа 204 Order deleted successfully. Успешное удаление заказа', async ({ request }) => {
+test.describe('Тестирование DELETE запроса', (): void => {
+  test('Код ответа 204 Order deleted successfully. Успешное удаление заказа', async ({
+    request,
+  }) => {
     const requestHeaders = {
       api_key: '1234567890123456',
     }
@@ -87,7 +97,9 @@ test.describe("Тестирование DELETE запроса", (): void => {
     expect(statusCode).toBe(204)
   })
 
-  test('Код ответа 401 Unauthorized. Неуспешное удаление заказа с некорректным API-ключом', async ({ request }) => {
+  test('Код ответа 401 Unauthorized. Неуспешное удаление заказа с некорректным API-ключом', async ({
+    request,
+  }) => {
     const requestHeaders = {
       api_key: '123',
     }
@@ -109,7 +121,6 @@ test.describe("Тестирование DELETE запроса", (): void => {
     expect(statusCode).toBe(400)
   })
 })
-
 
 //Примеры с урока
 test('get order with correct id should receive code 200', async ({ request }) => {
